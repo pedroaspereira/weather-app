@@ -7,9 +7,11 @@ import usePlacesAutoComplete, {
 import {
   Combobox,
   ComboboxInput,
+  ComboboxList,
   ComboboxOption,
   ComboboxPopover
 } from '@reach/combobox';
+import { Container, Input, Popover, Options, List } from './styles'
 
 export default function Search({ panTo }) {
   const {
@@ -40,8 +42,8 @@ export default function Search({ panTo }) {
   };
 
   return (
-    <Combobox onSelect={handleSelect}>
-      <ComboboxInput
+    <Container onSelect={handleSelect}>
+      <Input
         value={value}
         onChange={e => {
           setValue(e.target.value);
@@ -49,12 +51,14 @@ export default function Search({ panTo }) {
         disabled={!ready}
         placeholder={'Type a city to check weather'}
       />
-      <ComboboxPopover>
-        {status === 'OK' &&
+      <Popover>
+        <List>
+          {status === 'OK' &&
           data.map(({ id, description }) => (
-            <ComboboxOption key={id} value={description} />
+            <Options key={id} value={description} />
           ))}
-      </ComboboxPopover>
-    </Combobox>
+        </List>
+      </Popover>
+    </Container>
   );
 }
