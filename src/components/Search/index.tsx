@@ -4,14 +4,7 @@ import usePlacesAutoComplete, {
   getLatLng
 } from 'use-places-autocomplete';
 
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxList,
-  ComboboxOption,
-  ComboboxPopover
-} from '@reach/combobox';
-import { Container, Input, Popover, Options, List } from './styles'
+import { Container, Input, List, Options, Popover } from './styles';
 
 export default function Search({ panTo }) {
   const {
@@ -22,10 +15,15 @@ export default function Search({ panTo }) {
     clearSuggestions
   } = usePlacesAutoComplete({
     requestOptions: {
-      location: { lat: () => 43.653225, lng: () => -79.383186 },
-      radius: 100 * 1000
-    }
+      location: { lat: () => -22.99991, lng: () => -43.36581 },
+      radius: 100 * 2000
+    },
+    debounce: 300
   });
+
+  const handleInput = e => {
+    setValue(e.target.value);
+  };
 
   const handleSelect = async address => {
     setValue(address, false);
@@ -34,7 +32,6 @@ export default function Search({ panTo }) {
     try {
       const results = await getGeocode({ address });
       const { lat, lng } = await getLatLng(results[0]);
-      console.log(lat, lng);
       panTo({ lat, lng });
     } catch (error) {
       console.log('😱 Error: ', error);
@@ -46,7 +43,7 @@ export default function Search({ panTo }) {
       <Input
         value={value}
         onChange={e => {
-          setValue(e.target.value);
+          handleInput(e);
         }}
         disabled={!ready}
         placeholder={'Type a city to check weather'}
@@ -54,9 +51,9 @@ export default function Search({ panTo }) {
       <Popover>
         <List>
           {status === 'OK' &&
-          data.map(({ id, description }) => (
-            <Options key={id} value={description} />
-          ))}
+            data.map(({ id, description }) => (
+              <Options key={id} value={description} />
+            ))}
         </List>
       </Popover>
     </Container>

@@ -1,13 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
-import Search from '../Search';
 
+import Search from '../Search';
 import mapStyles from './mapStyles';
 import Header from '../Header';
 import LocateButton from '../LocateButton';
-import SearchButton from '../SearchButton';
-import Button from '../Button'
-import { useFetch } from '@/hooks/useFetch';
+import Button from '../Button';
+import WeatherModal from '../WeatherModal';
+
+import { Container } from './styles';
+
+interface IMarkers {
+  lat: number;
+  lng: number;
+  time: Date;
+}
 
 const mapContainerStyle = {
   width: '100vw',
@@ -25,24 +32,46 @@ const options = {
   zoomControl: false
 };
 
-export default function GoogleMapsComponent() {
+const GoogleMapsComponent = () => {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyDCjZ6nyjGFoMP2mMcVEX6hWoaBpW6PXCo',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries: ['places']
   });
-  const [markers, setMarkers] = useState<any>([]);
+  const [markers, setMarkers] = useState<IMarkers>({
+    lat: null,
+    lng: null,
+    time: null
+  });
+  const [showWeatherModal, setShowWeatherModal] = useState<boolean>(false);
 
-  function getLocation(event) {
-    setMarkers({
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng(),
-      time: new Date()
-    });
-    console.log(markers);
-  }
+  const getLocation = useCallback(event => {
+    try {
+      setMarkers({
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng(),
+        time: new Date()
+      });
+    } catch (error) {
+      ('It was not possible to get location');
+    }
+  }, []);
 
-  const {data} = useFetch(`http://api.openweathermap.org/data/2.5/find?lat=${markers.lat}&lon=${markers.lng}&cnt=15&APPID=dabbb993d4b0dcd404cbd27f9143ec78`)
-  console.log(data)
+  const initialRender = useRef(true);
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      setShowWeatherModal(true);
+    }
+  }, [showWeatherModal]);
+
+  const showModal = () => {
+    return showWeatherModal
+      ? setShowWeatherModal(false)
+      : setShowWeatherModal(true);
+  };
+
   const mapRef = useRef<any>();
   const onMapLoad = useCallback(map => {
     mapRef.current = map;
@@ -58,22 +87,37 @@ export default function GoogleMapsComponent() {
 
   return (
     <div>
-      <Header>
-        <Search panTo={panTo} />
-        <LocateButton panTo={panTo} />
-        <Button onClick={() => console.log(data.list)} style={{ marginLeft: '5px'}}>Search</Button>
-      </Header>
+      <Container>
+        <Header>
+          <Search panTo={panTo} />
+          <LocateButton panTo={panTo} />
+          <Button
+            onClick={() => {
+              showModal();
+            }}
+            style={{ marginLeft: '5px', height: '50px', width: '80px' }}
+          >
+            Search
+          </Button>
+        </Header>
+        {showWeatherModal ? (
+          <WeatherModal lat={markers.lat} lng={markers.lng} />
+        ) : null}
+      </Container>
 
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={8}
+        zoom={10}
         center={center}
         options={options}
-        onClick={(event) => getLocation(event)}
+        // onClick={getData}
+        onClick={getLocation}
         onLoad={onMapLoad}
       >
         <Marker position={{ lat: markers.lat, lng: markers.lng }} />
       </GoogleMap>
     </div>
   );
-}
+};
+
+export default GoogleMapsComponent;

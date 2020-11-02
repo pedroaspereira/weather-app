@@ -19,6 +19,7 @@ export const Input = styled(ComboboxInput)`
   width: 100%;
   color: ${props => props.theme.colors.black};
   width: 400px;
+  height: 50px;
   display: flex;
   align-items: center;
 
@@ -38,7 +39,6 @@ export const Input = styled(ComboboxInput)`
 export const Popover = styled(ComboboxPopover)`
   background-color: ${props => props.theme.colors.grey};
   border-radius: 10px;
-
 `;
 
 export const List = styled(ComboboxList)`
