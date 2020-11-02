@@ -23,7 +23,6 @@ interface WheaterDescription {
 }
 
 const WeatherModal = ({ lat, lng }: any) => {
-  console.log(lat, lng, 'aqui');
   const [cityList, setCityList] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [pickedCity, setPickedCity] = useState<any>();
@@ -33,16 +32,15 @@ const WeatherModal = ({ lat, lng }: any) => {
   useEffect(() => {
     try {
       fetch(
-        `http://api.openweathermap.org/data/2.5/find?lat=${lat}&lon=${lng}&units=metric&cnt=15&APPID=${process.env.NEXT_PUBLIC_WEATHER_APP_ID}`
+        `https://api.openweathermap.org/data/2.5/find?lat=${lat}&lon=${lng}&units=metric&cnt=15&APPID=dabbb993d4b0dcd404cbd27f9143ec78`
       ).then(response => {
         response.json().then(data => {
           setCityList(data.list);
           setLoading(false);
-          console.log(data.list, 'data');
         });
       });
     } catch (err) {
-      console.log(err, 'error');
+      throw Error(err);
     }
   }, []);
 
@@ -57,7 +55,6 @@ const WeatherModal = ({ lat, lng }: any) => {
 
   function closeButton() {
     setCloseModal(true);
-    console.log(closeModal, 'modal');
   }
 
   return (

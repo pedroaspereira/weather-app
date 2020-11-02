@@ -20,7 +20,6 @@ interface ICity {
 }
 
 const CityCard = ({ city }: ICity) => {
-  console.log(city, 'city');
   return (
     <Container>
       <h1>{city.name}</h1>
