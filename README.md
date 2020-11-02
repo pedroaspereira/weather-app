@@ -14,8 +14,11 @@ This project has been developed to give to Users access to an easy way to find o
 >#### FETCH DATA: axios,
 >#### STYLING: styled-components,
 
+## How to run this project
 
 ```bash
+git clone
+
 npm install
 # or
 yarn install
