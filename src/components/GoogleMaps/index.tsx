@@ -27,7 +27,7 @@ const center = {
 };
 
 const options = {
-  styles: mapStyles,
+  //styles: mapStyles,
   disableDefaultUI: true,
   zoomControl: false
 };
@@ -110,7 +110,6 @@ const GoogleMapsComponent = () => {
         zoom={10}
         center={center}
         options={options}
-        // onClick={getData}
         onClick={getLocation}
         onLoad={onMapLoad}
       >
