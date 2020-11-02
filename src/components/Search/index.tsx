@@ -7,6 +7,7 @@ import usePlacesAutoComplete, {
 import { Container, Input, List, Options, Popover } from './styles';
 
 export default function Search({ panTo }) {
+  const MyLatlng = new google.maps.LatLng(-22.99991, -43.36581);
   const {
     ready,
     value,
@@ -15,7 +16,7 @@ export default function Search({ panTo }) {
     clearSuggestions
   } = usePlacesAutoComplete({
     requestOptions: {
-      location: { lat: () => -22.99991, lng: () => -43.36581 },
+      location: MyLatlng,
       radius: 100 * 2000
     },
     debounce: 300
