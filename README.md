@@ -9,10 +9,10 @@ This project has been developed to give to Users access to an easy way to find o
 
 >As secondaries tecnologies, it uses the technologies below:
 
->## MAP RENDERING: google-maps-react,
->## AUTOCOMPLETE: use-places-autocomplete,
->## FETCH DATA: axios,
->## STYLING: styled-components,
+>#### MAP RENDERING: google-maps-react,
+>#### AUTOCOMPLETE: use-places-autocomplete,
+>#### FETCH DATA: axios,
+>#### STYLING: styled-components,
 
 
 ```bash
